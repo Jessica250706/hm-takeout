@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -52,11 +52,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 密码比对
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
-            //密码错误
+            // 密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        if (employee.getStatus() == StatusConstant.DISABLE) {
+        if (Objects.equals(employee.getStatus(), StatusConstant.DISABLE)) {
             // 账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
@@ -79,12 +79,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
         // 设置账号密码，默认密码 123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-        // 设置当前记录的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        // 设置当前记录创建人 id 和修改人 id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.save(employee);
     }
@@ -118,8 +112,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                                     .status(status)
                                     .id(id)
-                                    .updateTime(LocalDateTime.now())
-                                    .updateUser(BaseContext.getCurrentId())
                                     .build();
 
         employeeMapper.update(employee);
@@ -150,9 +142,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
-
         employeeMapper.update(employee);
     }
 
@@ -177,8 +166,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         String newPassword = DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes());
         employee.setPassword(newPassword);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.update(employee);
     }
 
