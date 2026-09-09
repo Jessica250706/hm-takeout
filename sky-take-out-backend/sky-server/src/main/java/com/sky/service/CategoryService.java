@@ -31,7 +31,7 @@ public interface CategoryService {
      * @param id
      * @return
      */
-    void deleteCategory(Long id);
+    void deleteById(Long id);
 
     /**
      * 分类分页查询

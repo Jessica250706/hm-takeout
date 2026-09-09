@@ -54,8 +54,8 @@ public class CategoryController {
      * @return
      */
     @DeleteMapping
-    public Result deleteCategory(Long id) {
-        categoryService.deleteCategory(id);
+    public Result deleteById(Long id) {
+        categoryService.deleteById(id);
         return Result.success();
     }
 
