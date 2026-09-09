@@ -82,4 +82,17 @@ public class CategoryController {
         List<Category> categories = categoryService.listByType(type);
         return Result.success(categories);
     }
+
+    /**
+     * 启用、禁用分类
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public Result updateStatus(@PathVariable Integer status, Long id) {
+        categoryService.updateStatus(status, id);
+        return Result.success();
+    }
 }

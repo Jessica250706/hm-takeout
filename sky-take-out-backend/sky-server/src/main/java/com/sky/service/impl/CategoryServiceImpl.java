@@ -102,4 +102,22 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> listByType(Integer type) {
         return categoryMapper.listByType(type);
     }
+
+    /**
+     * 启用、禁用分类
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    @Override
+    public void updateStatus(Integer status, Long id) {
+        Category category = Category.builder()
+                                    .id(id)
+                                    .status(status)
+                                    .updateTime(LocalDateTime.now())
+                                    .updateUser(BaseContext.getCurrentId())
+                                    .build();
+        categoryMapper.updateCategory(category);
+    }
 }

@@ -48,4 +48,13 @@ public interface CategoryService {
      * @return
      */
     List<Category> listByType(Integer type);
+
+    /**
+     * 启用、禁用分类
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    void updateStatus(Integer status, Long id);
 }
