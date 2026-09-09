@@ -1,6 +1,8 @@
 package com.sky.controller.admin;
 
 import com.sky.dto.CategoryDTO;
+import com.sky.dto.CategoryPageQueryDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,5 +54,17 @@ public class CategoryController {
     public Result deleteCategory(Long id) {
         categoryService.deleteCategory(id);
         return Result.success();
+    }
+
+    /**
+     * 分类分页查询
+     *
+     * @param categoryPageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    public Result<PageResult> listCategory(CategoryPageQueryDTO categoryPageQueryDTO) {
+        PageResult pageResult = categoryService.listCategory(categoryPageQueryDTO);
+        return Result.success(pageResult);
     }
 }
