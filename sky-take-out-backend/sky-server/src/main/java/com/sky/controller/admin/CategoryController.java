@@ -2,12 +2,15 @@ package com.sky.controller.admin;
 
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 分类管理
@@ -63,8 +66,20 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/page")
-    public Result<PageResult> listCategory(CategoryPageQueryDTO categoryPageQueryDTO) {
-        PageResult pageResult = categoryService.listCategory(categoryPageQueryDTO);
+    public Result<PageResult> pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
+        PageResult pageResult = categoryService.pageQuery(categoryPageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 根据类型查询分类
+     *
+     * @param type
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<List<Category>> listByType(Integer type) {
+        List<Category> categories = categoryService.listByType(type);
+        return Result.success(categories);
     }
 }
