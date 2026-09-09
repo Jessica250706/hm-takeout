@@ -41,4 +41,16 @@ public class CategoryController {
         categoryService.updateCategory(categoryDTO);
         return Result.success();
     }
+
+    /**
+     * 根据 id 删除分类
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping
+    public Result deleteCategory(Long id) {
+        categoryService.deleteCategory(id);
+        return Result.success();
+    }
 }

@@ -1,9 +1,12 @@
 package com.sky.service.impl;
 
+import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.entity.Category;
+import com.sky.exception.BaseException;
+import com.sky.exception.CategoryNotFoundException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.service.CategoryService;
 import org.springframework.beans.BeanUtils;
@@ -53,5 +56,23 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryMapper.updateCategory(category);
 
+    }
+
+    /**
+     * 根据 id 删除分类
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public void deleteCategory(Long id) {
+        // 判断 id 对应的分类是否存在
+        Category category = categoryMapper.getById(id);
+        if (category == null) {
+            throw new CategoryNotFoundException(MessageConstant.CATEGORY_NOT_FOUND);
+        }
+
+        // 删除分类
+        categoryMapper.deleteCategory(id);
     }
 }
