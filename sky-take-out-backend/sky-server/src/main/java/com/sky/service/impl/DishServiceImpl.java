@@ -57,7 +57,7 @@ public class DishServiceImpl implements DishService {
 
         // 向口味表插入 n 条数据
         List<DishFlavor> flavors = dishDTO.getFlavors();
-        if (flavors != null && flavors.size() > 0) {
+        if (flavors != null && !flavors.isEmpty()) {
             flavors.forEach(flavor -> flavor.setDishId(dishId));
             dishFlavorMapper.insertBatch(flavors);
         }
@@ -96,17 +96,15 @@ public class DishServiceImpl implements DishService {
 
         // 判断当前菜品能否被删除 —— 是否被套餐关联？
         List<Long> setmealIds = setmealDishMapper.getSetmealByDishId(ids);
-        if (setmealIds != null && setmealIds.size() > 0) {
+        if (setmealIds != null && !setmealIds.isEmpty()) {
             // 当前菜品被套餐关联，不能删除
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
 
         // 删除菜品表中的菜品数据
-        for (Long id : ids) {
-            dishMapper.deleteById(id);
+        dishMapper.deleteByIds(ids);
 
-            // 删除菜品关联的口味数据
-            dishFlavorMapper.deleteByDishId(id);
-        }
+        // 删除菜品关联的口味数据
+        dishFlavorMapper.deleteByDishIds(ids);
     }
 }
