@@ -62,12 +62,9 @@ public class SetmealServiceImpl implements SetmealService {
         setmealMapper.addSetmeal(setmeal);
 
         // 新增套餐包含的菜品（setmeal_dish表）
-        Long setmealId = setmeal.getId();
         List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
         if (setmealDishes != null && !setmealDishes.isEmpty()) {
-            for (SetmealDish setmealDish : setmealDishes) {
-                setmealDish.setSetmealId(setmealId);
-            }
+            setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmeal.getId()));
             setmealDishMapper.insertBatch(setmealDishes);
         }
     }
@@ -95,5 +92,51 @@ public class SetmealServiceImpl implements SetmealService {
 
         // 批量删除套餐关联的菜品
         setmealDishMapper.deleteBySetmealIds(ids);
+    }
+
+    /**
+     * 根据 id 查询套餐和套餐菜品关系
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealVO getByIdWithDish(Long id) {
+        SetmealVO setmealVO = new SetmealVO();
+
+        // 根据 id 查询套餐
+        Setmeal setmeal = setmealMapper.getById(id);
+        BeanUtils.copyProperties(setmeal, setmealVO);
+
+        // 据 id 查询套餐菜品关系
+        List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id);
+        setmealVO.setSetmealDishes(setmealDishes);
+
+        return setmealVO;
+    }
+
+    /**
+     * 修改套餐
+     *
+     * @param setmealDTO
+     * @return
+     */
+    @Override
+    public void updateSetmeal(SetmealDTO setmealDTO) {
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+
+        // 更新套餐
+        setmealMapper.updateSetmeal(setmeal);
+
+        // 删除套餐对应的菜品关系
+        setmealDishMapper.deleteBySetmealId(setmeal.getId());
+
+        // 新增套餐对应的菜品关系
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        if (setmealDishes != null && !setmealDishes.isEmpty()) {
+            setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmeal.getId()));
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
     }
 }
