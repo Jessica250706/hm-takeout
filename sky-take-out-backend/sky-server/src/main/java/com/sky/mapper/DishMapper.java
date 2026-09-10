@@ -81,4 +81,12 @@ public interface DishMapper {
      * @return
      */
     List<Dish> list(Dish dish);
+
+    /**
+     * 根据套餐 id 查询对应菜品的实体
+     *
+     * @param setmealId
+     * @return
+     */
+    List<Dish> getBySetmealId(Long setmealId);
 }

@@ -48,4 +48,13 @@ public interface SetmealService {
      * @return
      */
     void updateSetmeal(SetmealDTO setmealDTO);
+
+    /**
+     * 套餐起售、停售
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    void updateSetmealStatus(Integer status, Long id);
 }
