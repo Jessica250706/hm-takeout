@@ -90,7 +90,7 @@ public class DishServiceImpl implements DishService {
         for (Long id : ids) {
             Dish dish = dishMapper.getById(id);
             if (Objects.equals(dish.getStatus(), StatusConstant.ENABLE)) {
-                // 当前菜品处于起售中，不能删除
+                // 当前菜品处于起售状态，不能删除
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
         }

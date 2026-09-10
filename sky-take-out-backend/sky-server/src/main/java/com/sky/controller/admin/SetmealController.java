@@ -2,13 +2,14 @@ package com.sky.controller.admin;
 
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
-import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 套餐管理
@@ -42,6 +43,18 @@ public class SetmealController {
     @PostMapping
     public Result addSetmeal(@RequestBody SetmealDTO setmealDTO) {
         setmealService.addSetmealWithDishes(setmealDTO);
+        return Result.success();
+    }
+
+    /**
+     * 批量删除套餐
+     *
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public Result deleteSetmeal(@RequestParam List<Long> ids) {
+        setmealService.deleteBatchSetmeal(ids);
         return Result.success();
     }
 
