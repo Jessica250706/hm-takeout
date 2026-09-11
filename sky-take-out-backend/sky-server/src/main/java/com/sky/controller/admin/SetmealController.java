@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.constant.CacheConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
@@ -8,6 +9,8 @@ import com.sky.service.SetmealService;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +45,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
+    @CacheEvict(cacheNames = CacheConstant.SETMEAL_CACHE, key = "#setmealDTO.categoryId")
     public Result addSetmeal(@RequestBody SetmealDTO setmealDTO) {
         setmealService.addSetmealWithDishes(setmealDTO);
         return Result.success();
@@ -54,6 +58,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(cacheNames = CacheConstant.SETMEAL_CACHE, allEntries = true)
     public Result deleteSetmeal(@RequestParam List<Long> ids) {
         setmealService.deleteBatchSetmeal(ids);
         return Result.success();
@@ -78,6 +83,7 @@ public class SetmealController {
      * @return
      */
     @PutMapping
+    @CacheEvict(cacheNames = CacheConstant.SETMEAL_CACHE, allEntries = true)
     public Result updateSetmeal(@RequestBody SetmealDTO setmealDTO) {
         setmealService.updateSetmeal(setmealDTO);
         return Result.success();
@@ -91,6 +97,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping("/status/{status}")
+    @CacheEvict(cacheNames = CacheConstant.SETMEAL_CACHE, allEntries = true)
     public Result updateSetmealStatus(@PathVariable Integer status, Long id) {
         setmealService.updateSetmealStatus(status, id);
         return Result.success();
