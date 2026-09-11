@@ -9,9 +9,11 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 菜品管理
@@ -24,6 +26,9 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 新增菜品
      *
@@ -33,6 +38,8 @@ public class DishController {
     @PostMapping
     public Result save(@RequestBody DishDTO dishDTO) {
         dishService.saveWithFlavor(dishDTO);
+        String key = "dish_" + dishDTO.getCategoryId();
+        clearCache(key);
         return Result.success();
     }
 
@@ -57,6 +64,7 @@ public class DishController {
     @DeleteMapping
     public Result deleteBatch(@RequestParam List<Long> ids) {
         dishService.deleteBatch(ids);
+        clearCache("dish_*");
         return Result.success();
     }
 
@@ -81,6 +89,7 @@ public class DishController {
     @PutMapping
     public Result update(@RequestBody DishDTO dishDTO) {
         dishService.updateWithFlavor(dishDTO);
+        clearCache("dish_*");
         return Result.success();
     }
 
@@ -94,6 +103,7 @@ public class DishController {
     @PostMapping("/status/{status}")
     public Result updateStatus(@PathVariable Integer status, Long id) {
         dishService.updateStatus(status, id);
+        clearCache("dish_*");
         return Result.success();
     }
 
@@ -107,5 +117,15 @@ public class DishController {
     public Result<List<Dish>> listByCategoryId(Long categoryId) {
         List<Dish> dishes = dishService.listByCategoryId(categoryId);
         return Result.success(dishes);
+    }
+
+    /**
+     * 清理缓存数据
+     *
+     * @param pattern
+     */
+    private void clearCache(String pattern) {
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
     }
 }
