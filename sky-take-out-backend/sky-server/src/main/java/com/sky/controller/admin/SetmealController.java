@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 套餐管理
  */
-@RestController
+@RestController("AdminSetmealController")
 @RequestMapping("/admin/setmeal")
 @Slf4j
 public class SetmealController {

@@ -22,13 +22,14 @@ import java.util.Map;
 /**
  * 员工管理
  */
-@RestController
+@RestController("AdminEmployeeController")
 @RequestMapping("/admin/employee")
 @Slf4j
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
     @Autowired
     private JwtProperties jwtProperties;
 
