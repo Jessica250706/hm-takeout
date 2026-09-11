@@ -1,0 +1,5 @@
+com\itheima\CacheDemoApplication.class
+com\itheima\config\WebMvcConfiguration.class
+com\itheima\controller\UserController.class
+com\itheima\mapper\UserMapper.class
+com\itheima\entity\User.class
