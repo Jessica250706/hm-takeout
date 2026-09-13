@@ -7,9 +7,14 @@ import java.io.Serializable;
 @Data
 public class OrdersRejectionDTO implements Serializable {
 
+    /**
+     * 主键
+     */
     private Long id;
 
-    //订单拒绝原因
+    /**
+     * 订单拒绝原因
+     */
     private String rejectionReason;
 
 }

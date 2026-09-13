@@ -3,12 +3,21 @@ package com.sky.mapper;
 import com.sky.entity.AddressBook;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
 @Mapper
 public interface AddressBookMapper {
+
+    /**
+     * 根据 id 获取地址信息
+     * @param id
+     * @return
+     */
+    @Select("select * from address_book where id = #{id};")
+    AddressBook getById(Long id);
 
     /**
      * 条件查询查询地址信息

@@ -9,22 +9,46 @@ import java.time.LocalDateTime;
 @Data
 public class OrdersPageQueryDTO implements Serializable {
 
+    /**
+     * 页码
+     */
     private int page;
 
+    /**
+     * 每页记录数
+     */
     private int pageSize;
 
+    /**
+     * 订单号
+     */
     private String number;
 
+    /**
+     * 手机号
+     */
     private  String phone;
 
+    /**
+     * 订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消 7退款
+     */
     private Integer status;
 
+    /**
+     * 开始时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime beginTime;
 
+    /**
+     * 结束时间
+     */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
 
+    /**
+     * 下单用户id
+     */
     private Long userId;
 
 }
