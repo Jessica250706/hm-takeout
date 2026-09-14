@@ -81,4 +81,13 @@ public interface SetmealMapper {
      * @return
      */
     List<DishItemVO> listDishItemBySetmealId(Long setmealId);
+
+    /**
+     * 根据套餐状态查询套餐的数量
+     *
+     * @param status
+     * @return
+     */
+    @Select("select count(id) from setmeal where status = #{status}")
+    Integer countByStatus(Integer status);
 }

@@ -80,4 +80,21 @@
     order by date
   </select>
 
+  <select id="getBusinessDataByDate" resultType="com.sky.dto.BusinessDataDTO">
+    select ifnull(sum(if(status = 5, amount, 0)), 0) as turnover,
+           ifnull(sum(if(status = 5, 1, 0)), 0)      as validOrderCount,
+           count(*)                                  as totalOrderCount
+    from orders
+    where order_time &gt;= #{begin}
+      and order_time &lt; #{end}
+  </select>
+
+  <select id="countByStatus" resultType="java.lang.Integer">
+    select count(id)
+    from orders
+    <where>
+      <if test="status != null">status = #{status}</if>
+    </where>
+  </select>
+
 </mapper>

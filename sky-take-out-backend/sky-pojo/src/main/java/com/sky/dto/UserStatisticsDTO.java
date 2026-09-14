@@ -2,8 +2,10 @@ package com.sky.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class UserStatisticsDTO {
+public class UserStatisticsDTO implements Serializable {
 
     /**
      * 日期，格式 yyyy-MM-dd

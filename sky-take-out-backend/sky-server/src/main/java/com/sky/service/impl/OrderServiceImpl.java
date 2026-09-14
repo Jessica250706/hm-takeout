@@ -401,9 +401,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderStatisticsVO statistics() {
-        Integer toBeConfirmed = orderMapper.statisticsByStatus(Orders.TO_BE_CONFIRMED); // 待接单
-        Integer confirmed = orderMapper.statisticsByStatus(Orders.CONFIRMED); // 待派送
-        Integer deliveryInProgress = orderMapper.statisticsByStatus(Orders.DELIVERY_IN_PROGRESS); // 派送中
+        Integer toBeConfirmed = orderMapper.countByStatus(Orders.TO_BE_CONFIRMED); // 待接单
+        Integer confirmed = orderMapper.countByStatus(Orders.CONFIRMED); // 待派送
+        Integer deliveryInProgress = orderMapper.countByStatus(Orders.DELIVERY_IN_PROGRESS); // 派送中
 
         return OrderStatisticsVO.builder()
                 .toBeConfirmed(toBeConfirmed)

@@ -47,12 +47,6 @@ public class ReportServiceImpl implements ReportService {
         // 计算日期
         List<LocalDate> dateList = getRangeTime(begin, end);
 
-        LocalDate current = begin;
-        while (!current.isAfter(end)) {
-            dateList.add(current);
-            current = current.plusDays(1);
-        }
-
         // 计算营业额：状态为已完成的订单金额合计
         List<TurnoverDTO> turnoverList = orderMapper.getTurnoverByDate(begin, end, Orders.COMPLETED);
 

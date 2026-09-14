@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.BusinessDataDTO;
 import com.sky.dto.OrderStatisticsDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.TurnoverDTO;
@@ -56,15 +57,6 @@ public interface OrderMapper {
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 
     /**
-     * 根据订单状态统计订单个数
-     *
-     * @param status
-     * @return
-     */
-    @Select("select count(id) from orders where status = #{status}")
-    Integer statisticsByStatus(Integer status);
-
-    /**
      * 根据订单状态和下单时间查询订单
      *
      * @param status
@@ -92,5 +84,22 @@ public interface OrderMapper {
      * @return 每天的总订单数和有效订单数
      */
     List<OrderStatisticsDTO> getOrderStatisticsByDate(LocalDateTime begin, LocalDateTime end);
+
+    /**
+     * 统计一天内的订单数据
+     *
+     * @param begin 开始时间
+     * @param end   结束时间
+     * @return 每天的总订单数和有效订单数
+     */
+    BusinessDataDTO getBusinessDataByDate(LocalDateTime begin, LocalDateTime end);
+
+    /**
+     * 根据订单状态查询订单的数量
+     *
+     * @param status
+     * @return
+     */
+    Integer countByStatus(Integer status);
 
 }

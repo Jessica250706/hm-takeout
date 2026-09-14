@@ -89,4 +89,13 @@ public interface DishMapper {
      * @return
      */
     List<Dish> getBySetmealId(Long setmealId);
+
+    /**
+     * 根据菜品状态查询菜品的数量
+     *
+     * @param status
+     * @return
+     */
+    @Select("select count(id) from dish where status = #{status}")
+    Integer countByStatus(Integer status);
 }
