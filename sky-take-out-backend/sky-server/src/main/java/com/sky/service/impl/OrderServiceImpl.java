@@ -557,7 +557,7 @@ public class OrderServiceImpl implements OrderService {
         String shopCoordinate = HttpClientUtil.doGet("https://api.map.baidu.com/geocoding/v3", map);
 
         JSONObject jsonObject = JSON.parseObject(shopCoordinate);
-        if(!jsonObject.getString("status").equals("0")){
+        if (!jsonObject.getString("status").equals("0")) {
             throw new OrderBusinessException(MessageConstant.SHOP_ADDRESS_PARSE_FAILED);
         }
 
@@ -568,12 +568,12 @@ public class OrderServiceImpl implements OrderService {
         // 店铺经纬度坐标
         String shopLngLat = lat + "," + lng;
 
-        map.put("address",address);
+        map.put("address", address);
         // 获取用户收货地址的经纬度坐标
         String userCoordinate = HttpClientUtil.doGet("https://api.map.baidu.com/geocoding/v3", map);
 
         jsonObject = JSON.parseObject(userCoordinate);
-        if(!jsonObject.getString("status").equals("0")){
+        if (!jsonObject.getString("status").equals("0")) {
             throw new OrderBusinessException(MessageConstant.USER_ADDRESS_PARSE_FAILED);
         }
 
@@ -592,7 +592,7 @@ public class OrderServiceImpl implements OrderService {
         String json = HttpClientUtil.doGet("https://api.map.baidu.com/directionlite/v1/driving", map);
 
         jsonObject = JSON.parseObject(json);
-        if(!jsonObject.getString("status").equals("0")){
+        if (!jsonObject.getString("status").equals("0")) {
             throw new OrderBusinessException(MessageConstant.DELIVERY_ROUTE_PLAN_FAILED);
         }
 
@@ -601,7 +601,7 @@ public class OrderServiceImpl implements OrderService {
         JSONArray jsonArray = (JSONArray) result.get("routes");
         Integer distance = (Integer) ((JSONObject) jsonArray.get(0)).get("distance");
 
-        if(distance > 5000){
+        if (distance > 5000) {
             // 配送距离超过5000米
             throw new OrderBusinessException(MessageConstant.OUT_OF_DELIVERY_RANGE);
         }
