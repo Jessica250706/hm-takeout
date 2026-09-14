@@ -8,4 +8,14 @@
     values (#{openid}, #{name}, #{phone}, #{sex}, #{idNumber}, #{avatar}, #{createTime});
   </insert>
 
+  <select id="getDailyNewUserCount" resultType="com.sky.dto.UserStatisticsDTO">
+    select date_format(create_time, '%Y-%m-%d') as date,
+           count(*)                             as newUserNumber
+    from user
+    where create_time >= #{begin}
+      and create_time &lt; #{end}
+    group by date_format(create_time, '%Y-%m-%d')
+    order by date
+  </select>
+
 </mapper>
