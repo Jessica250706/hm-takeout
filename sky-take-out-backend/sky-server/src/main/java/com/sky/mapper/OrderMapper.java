@@ -1,6 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.OrderStatisticsDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.TurnoverDTO;
 import com.sky.entity.Orders;
@@ -82,5 +83,14 @@ public interface OrderMapper {
      * @return 每天的营业额列表
      */
     List<TurnoverDTO> getTurnoverByDate(LocalDate begin, LocalDate end, Integer status);
+
+    /**
+     * 统计指定时间范围内每天的订单数据
+     *
+     * @param begin 开始时间
+     * @param end   结束时间
+     * @return 每天的总订单数和有效订单数
+     */
+    List<OrderStatisticsDTO> getOrderStatisticsByDate(LocalDateTime begin, LocalDateTime end);
 
 }
