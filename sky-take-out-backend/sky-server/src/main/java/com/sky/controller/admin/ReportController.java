@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController("AdminReportController")
 @RequestMapping("/admin/report")
@@ -70,7 +70,7 @@ public class ReportController {
     }
 
     /**
-     * 查询销量排名top10接口
+     * 查询销量排名 top10 接口
      *
      * @param begin
      * @param end
@@ -82,5 +82,15 @@ public class ReportController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
     ) {
         return Result.success(reportService.getTopTenOrdersStatistics(begin, end));
+    }
+
+    /**
+     * 导出 Excel 报表接口
+     *
+     * @return
+     */
+    @GetMapping("/export")
+    private void export(HttpServletResponse response) {
+        reportService.exportBusinessData(response);
     }
 }

@@ -5,6 +5,8 @@ import com.sky.vo.DishOverViewVO;
 import com.sky.vo.OrderOverViewVO;
 import com.sky.vo.SetmealOverViewVO;
 
+import java.time.LocalDate;
+
 public interface WorkspaceService {
 
     /**
@@ -34,4 +36,12 @@ public interface WorkspaceService {
      * @return
      */
     OrderOverViewVO getOverViewOrders();
+
+    /**
+     * 查询指定日期范围内的运营数据
+     *
+     * @param begin 开始日期（含）
+     * @param end   结束日期（含）
+     */
+    BusinessDataVO getBusinessData(LocalDate begin, LocalDate end);
 }

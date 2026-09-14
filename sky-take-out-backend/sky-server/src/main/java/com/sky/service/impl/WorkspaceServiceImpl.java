@@ -42,40 +42,51 @@ public class WorkspaceServiceImpl implements WorkspaceService {
      */
     @Override
     public BusinessDataVO getBusinessData() {
-        // 获取今日日期范围
-        LocalDate date = LocalDate.now();
-        LocalDateTime begin = date.atStartOfDay();
-        LocalDateTime end = begin.plusDays(1);
+        LocalDate today = LocalDate.now();
+        return getBusinessData(today, today);
+    }
 
-        // 查询订单数据
-        BusinessDataDTO businessDataDTO = orderMapper.getBusinessDataByDate(begin, end);
+    /**
+     * 查询指定日期范围内的运营数据
+     *
+     * @param begin 开始日期（含）
+     * @param end   结束日期（含）
+     * @return
+     */
+    @Override
+    public BusinessDataVO getBusinessData(LocalDate begin, LocalDate end) {
+        // 1. 转换时间范围：begin 当天 00:00:00 到 end 后一天 00:00:00
+        LocalDateTime beginTime = begin.atStartOfDay();
+        LocalDateTime endTime = end.plusDays(1).atStartOfDay();
 
-        if (businessDataDTO == null) {
-            businessDataDTO = new BusinessDataDTO();
-        }
+        // 2. 查询订单汇总数据
+        BusinessDataDTO businessDataDTO = orderMapper.getBusinessDataByDate(beginTime, endTime);
 
-        // 使用 BigDecimal 或 Double 时进行判空
-        double turnover = businessDataDTO.getTurnover() == null ? 0.0 : businessDataDTO.getTurnover();
-        int validOrderCount = businessDataDTO.getValidOrderCount() == null ? 0 : businessDataDTO.getValidOrderCount();
-        int totalOrderCount = businessDataDTO.getTotalOrderCount() == null ? 0 : businessDataDTO.getTotalOrderCount();
+        double turnover = businessDataDTO.getTurnover();
+        int validOrderCount = businessDataDTO.getValidOrderCount();
+        int totalOrderCount = businessDataDTO.getTotalOrderCount();
 
-        // 计算订单完成率，避免除零
+        // 3. 计算订单完成率，避免除零
         double orderCompletionRate = 0.0;
         if (totalOrderCount > 0) {
             orderCompletionRate = validOrderCount * 1.0 / totalOrderCount;
         }
 
-        // 4计算平均客单价，避免除零
+        // 4. 计算平均客单价，避免除零
         double unitPrice = 0.0;
         if (validOrderCount > 0) {
             unitPrice = turnover / validOrderCount;
         }
 
-        // 查询新增用户数
-        List<UserStatisticsDTO> userStatisticsDTOList = userMapper.getDailyNewUserCount(begin, end);
+        // 5. 查询新增用户数：汇总时间段内每天的新增用户数
+        List<UserStatisticsDTO> userStatisticsDTOList = userMapper.getDailyNewUserCount(beginTime, endTime);
         int newUsers = 0;
         if (userStatisticsDTOList != null && !userStatisticsDTOList.isEmpty()) {
-            newUsers = userStatisticsDTOList.get(0).getNewUserNumber() == null ? 0 : userStatisticsDTOList.get(0).getNewUserNumber();
+            for (UserStatisticsDTO dto : userStatisticsDTOList) {
+                if (dto.getNewUserNumber() != null) {
+                    newUsers += dto.getNewUserNumber();
+                }
+            }
         }
 
         return BusinessDataVO.builder()

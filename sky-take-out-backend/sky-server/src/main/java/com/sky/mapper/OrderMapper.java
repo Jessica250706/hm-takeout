@@ -1,10 +1,7 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
-import com.sky.dto.BusinessDataDTO;
-import com.sky.dto.OrderStatisticsDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.TurnoverDTO;
+import com.sky.dto.*;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -86,7 +83,7 @@ public interface OrderMapper {
     List<OrderStatisticsDTO> getOrderStatisticsByDate(LocalDateTime begin, LocalDateTime end);
 
     /**
-     * 统计一天内的订单数据
+     * 统计指定时间范围内的订单数据
      *
      * @param begin 开始时间
      * @param end   结束时间
@@ -101,5 +98,14 @@ public interface OrderMapper {
      * @return
      */
     Integer countByStatus(Integer status);
+
+    /**
+     * 统计指定时间范围内的运营数据
+     *
+     * @param begin 开始时间
+     * @param end   结束时间
+     * @return 每天的总订单数和有效订单数
+     */
+    List<DailyBusinessDataDTO> getDailyBusinessData(LocalDateTime begin, LocalDateTime end);
 
 }

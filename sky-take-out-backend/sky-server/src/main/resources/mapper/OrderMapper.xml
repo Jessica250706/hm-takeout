@@ -97,4 +97,37 @@
     </where>
   </select>
 
+  <select id="getDailyBusinessData" resultType="com.sky.dto.DailyBusinessDataDTO">
+    WITH RECURSIVE date_range AS (SELECT DATE(#{begin}) AS date
+                                  UNION ALL
+                                  SELECT DATE_ADD(date, INTERVAL 1 DAY)
+                                  FROM date_range
+                                  WHERE date &lt; DATE(#{end}) - INTERVAL 1 DAY)
+    SELECT DATE_FORMAT(dr.date, '%Y-%m-%d')              AS date,
+           IFNULL(SUM(IF(o.status = 5, o.amount, 0)), 0) AS turnover,
+           IFNULL(SUM(IF(o.status = 5, 1, 0)), 0)        AS validOrderCount,
+           COUNT(o.id)                                   AS totalOrderCount,
+           CASE
+             WHEN COUNT(o.id) = 0 THEN 0
+             ELSE IFNULL(SUM(IF(o.status = 5, 1, 0)), 0) / COUNT(o.id)
+             END                                         AS orderCompletionRate,
+           CASE
+             WHEN IFNULL(SUM(IF(o.status = 5, 1, 0)), 0) = 0 THEN 0
+             ELSE IFNULL(SUM(IF(o.status = 5, o.amount, 0)), 0)
+               / SUM(IF(o.status = 5, 1, 0))
+             END                                         AS unitPrice,
+           IFNULL(MAX(uc.newUserCount), 0)               AS newUsers
+    FROM date_range dr
+           LEFT JOIN orders o
+                     ON o.order_time &gt;= dr.date
+                       AND o.order_time &lt; DATE_ADD(dr.date, INTERVAL 1 DAY)
+           LEFT JOIN (SELECT DATE(create_time) AS date, COUNT(*) AS newUserCount
+                      FROM user
+                      WHERE create_time &gt;= #{begin}
+                        AND create_time &lt; #{end}
+                      GROUP BY DATE(create_time)) uc ON uc.date = dr.date
+    GROUP BY dr.date
+    ORDER BY dr.date;
+  </select>
+
 </mapper>
