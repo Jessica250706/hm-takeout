@@ -2,10 +2,12 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.TurnoverDTO;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -70,5 +72,15 @@ public interface OrderMapper {
      */
     @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrderTime(Integer status, LocalDateTime orderTime);
+
+    /**
+     * 统计指定日期范围内每天的营业额
+     *
+     * @param begin  开始日期
+     * @param end    结束日期
+     * @param status 订单状态
+     * @return 每天的营业额列表
+     */
+    List<TurnoverDTO> getTurnoverByDate(LocalDate begin, LocalDate end, Integer status);
 
 }

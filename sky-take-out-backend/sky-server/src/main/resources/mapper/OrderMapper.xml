@@ -58,4 +58,15 @@
     order by order_time desc
   </select>
 
+  <select id="getTurnoverByDate" resultType="com.sky.dto.TurnoverDTO">
+    select date_format(order_time, '%Y-%m-%d') as date,
+           sum(amount)                         as turnover
+    from orders
+    where status = #{status}
+      and order_time &gt;= #{begin}
+      and order_time &lt; date_add(#{end}, interval 1 day)
+    group by date_format(order_time, '%Y-%m-%d')
+    order by date
+  </select>
+
 </mapper>
