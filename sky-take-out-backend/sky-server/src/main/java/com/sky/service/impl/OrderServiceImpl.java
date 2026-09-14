@@ -197,8 +197,7 @@ public class OrderServiceImpl implements OrderService {
         map.put("orderId", ordersDB.getId());
         map.put("content", "订单号：" + outTradeNo);
 
-        String json = JSON.toJSONString(map);
-        webSocketServer.sendToAllClient(json);
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     /**
@@ -618,5 +617,28 @@ public class OrderServiceImpl implements OrderService {
             // 配送距离超过5000米
             throw new OrderBusinessException(MessageConstant.OUT_OF_DELIVERY_RANGE);
         }
+    }
+
+    /**
+     * 客户催单
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public void reminder(Long id) {
+        Orders ordersDB = orderMapper.getById(id);
+
+        // 校验订单是否存在
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        Map map = new HashMap();
+        map.put("type", MessageTypeConstant.CUSTOMER_REMIND); // 客户催单
+        map.put("orderId", id);
+        map.put("content", "订单号：" + ordersDB.getNumber());
+
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 }
