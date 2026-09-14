@@ -1,13 +1,13 @@
 package com.sky.service.impl;
 
-import com.sky.dto.OrderStatisticsDTO;
-import com.sky.dto.TurnoverDTO;
-import com.sky.dto.UserStatisticsDTO;
+import com.sky.dto.*;
 import com.sky.entity.Orders;
+import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     /**
      * 统计指定区间时间内的营业额
@@ -213,6 +216,38 @@ public class ReportServiceImpl implements ReportService {
                 .totalOrderCount(totalOrderCount)
                 .validOrderCount(validOrderCount)
                 .orderCompletionRate(orderCompletionRate)
+                .build();
+    }
+
+
+    /**
+     * 统计指定区间时间内的销量 TOP 10 的菜品
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public SalesTop10ReportVO getTopTenOrdersStatistics(LocalDate begin, LocalDate end) {
+        // 构建时间范围
+        LocalDateTime beginTime = begin.atStartOfDay();
+        LocalDateTime endTime = end.plusDays(1).atStartOfDay();
+
+        // 查询销量 TOP 10
+        List<GoodsSalesDTO> top10List = orderDetailMapper.getTop10ByDate(beginTime, endTime);
+
+        // 拼接名称和销量字符串
+        String nameList = top10List.stream()
+                .map(GoodsSalesDTO::getName)
+                .collect(Collectors.joining(","));
+        String numberList = top10List.stream()
+                .map(dto -> String.valueOf(dto.getNumber()))
+                .collect(Collectors.joining(","));
+
+        // 返回结果
+        return SalesTop10ReportVO.builder()
+                .nameList(nameList)
+                .numberList(numberList)
                 .build();
     }
 
